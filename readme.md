@@ -1,0 +1,1 @@
+Add details explaining how to interact with this api
