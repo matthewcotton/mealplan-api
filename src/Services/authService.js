@@ -1,4 +1,5 @@
 const createErr = require("http-errors");
+const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const { User } = require("../../models/users");
 
@@ -12,12 +13,16 @@ exports.auth = async function (req, res, next) {
     return next(createErr(401, "Incorrect username"));
   }
   // Password check
-  if (req.body.password !== user.password) {
-    return next(createErr(403, "Incorrect password"));
-  }
-  user.token = uuidv4();
-  await user.save();
-  res.send({ token: user.token, username: user.username });
+  bcrypt.compare(req.body.password, user.password, async (err, result) => {
+    err && next(createErr(500, "Password encrypting error"));
+    if (!result) {
+      return next(createErr(403, "Incorrect password"));
+    } else {
+      user.token = uuidv4();
+      await user.save();
+      res.send({ token: user.token, username: user.username });
+    }
+  });
 };
 
 // Token Check
