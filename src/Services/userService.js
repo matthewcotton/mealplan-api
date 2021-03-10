@@ -1,6 +1,6 @@
 const createErr = require("http-errors");
 const { User } = require("../../models/users");
-const authController = require("./authController");
+const authController = require("./authService");
 
 // Get user data (protected)
 exports.user = async function (req, res, next) {

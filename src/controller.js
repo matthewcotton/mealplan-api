@@ -1,23 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-const authController = require("./Controllers/authController");
-const userController = require("./Controllers/userController");
+const authService = require("./Services/authService");
+const userService = require("./Services/userService");
 
 /* Authentication */
-router.post("/auth", authController.auth);
+router.post("/auth", authService.auth);
 
 /* Define CRUD operations for users */
 // Get user data
-router.get("/user/:username", userController.user);
+router.get("/user/:username", userService.user);
 // Create a new user
-router.post("/user/add", userController.add);
+router.post("/user/add", userService.add);
 // Update username
-router.patch("/user/username/:username", userController.updateUsername);
+router.patch("/user/username/:username", userService.updateUsername);
 // Update password
-router.patch("/user/password/:username", userController.updatePassword);
+router.patch("/user/password/:username", userService.updatePassword);
 // Delete user
-router.delete("/user/:username", userController.delete);
+router.delete("/user/:username", userService.delete);
 
 /* Define CRUD operations for recipes */
 // Get all recipes
