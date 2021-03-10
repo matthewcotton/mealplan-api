@@ -4,7 +4,7 @@ const router = express.Router();
 const authController = require("./Controllers/authController");
 
 /* Authentication */
-router.post("/auth", authController.auth);
+// router.post("/auth", authController.auth);
 
 /* Define CRUD operations for users */
 // Get user data
