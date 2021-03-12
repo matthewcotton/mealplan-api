@@ -1,7 +1,11 @@
 const createErr = require("http-errors");
 const bcrypt = require("bcrypt");
-const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 const { User } = require("../../models/users");
+const { RequestTimeout } = require("http-errors");
+
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Authentication
 exports.auth = async function (req, res, next) {
@@ -18,7 +22,14 @@ exports.auth = async function (req, res, next) {
     if (!result) {
       return next(createErr(403, "Incorrect password"));
     } else {
-      user.token = uuidv4();
+      user.token = jwt.sign(
+        {
+          id: user.id,
+          username: user.username,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "60 days" }
+      );
       await user.save();
       res.send({ token: user.token, username: user.username });
     }
@@ -27,11 +38,18 @@ exports.auth = async function (req, res, next) {
 
 // Token Check
 exports.tokenCheck = async function (req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const user = await User.findOne({ token: authHeader });
-  if (user) {
-    return user;
-  } else {
-    next(createErr(401, "Authentication failed"));
-  }
+  const token = req.headers["authorization"];
+  if (!token)
+    return next(
+      createErr(401, "Authentication failed. No token included with request.")
+    );
+  jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+    if (err) next(createErr(500, "Authentication failed. JWT verify error."));
+    const user = User.findById(decoded.id);
+    if (user) {
+      return user;
+    } else {
+      next(createErr(401, "Authentication failed. No user found."));
+    }
+  });
 };
