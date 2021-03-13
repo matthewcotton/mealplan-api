@@ -1,6 +1,8 @@
 const createErr = require("http-errors");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const { User } = require("../../models/users");
-const authController = require("./authController");
+const authController = require("./authService");
 
 // Get user data (protected)
 exports.user = async function (req, res, next) {
@@ -33,35 +35,47 @@ exports.add = async function (req, res, next) {
   if (existingUser.length) {
     return next(createErr(409, "Username already exists"));
   }
-  const user = new User({
-    username: req.body.username.toLowerCase(),
-    password: req.body.password,
+  // Hash password
+  bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+    if (err) {
+      return next(createErr(500, "Password encrypting error"));
+    }
+    const user = new User({
+      username: req.body.username.toLowerCase(),
+      password: hash,
+    });
+    await user.save();
+    res.send({ message: "New user profile created" });
   });
-  await user.save();
-  res.send({ message: "New user profile created" });
 };
 
 // Update users password (protected)
 exports.updatePassword = async function (req, res, next) {
   authController.tokenCheck(req, res, next);
+  // Check username and password are included in the body
+  if (!req.body.new_password) {
+    return next(createErr(400, "New password required"));
+  }
   // Update password
-  if (req.body.new_password) {
+  bcrypt.hash(req.body.new_password, saltRounds, async (err, hash) => {
+    if (err) {
+      return next(createErr(500, "Password encrypting error"));
+    }
     const user = await User.findOneAndUpdate(
       {
         token: req.headers["authorization"],
         username: req.params.username.toLowerCase(),
       },
-      { password: req.body.new_password }
+      { password: hash }
     );
     if (!user) {
       return next(
         createErr(404, `No user found with username ${req.params.username}`)
       );
+    } else {
+      res.send({ message: "User profile updated" });
     }
-  } else {
-    return next(createErr(404, "New password is required"));
-  }
-  res.send({ message: "User profile updated" });
+  });
 };
 
 // Update users username (protected)

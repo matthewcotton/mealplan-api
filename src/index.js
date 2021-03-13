@@ -1,6 +1,6 @@
 // Require express and router
 const express = require("express");
-const router = require("./router");
+const router = require("./controller");
 const cors = require("cors");
 
 // Use dotenv package to parse enviroment variables
