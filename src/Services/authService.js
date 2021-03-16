@@ -1,8 +1,6 @@
-const createErr = require("http-errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../../models/users");
-const { RequestTimeout } = require("http-errors");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -14,13 +12,13 @@ exports.auth = async function (req, res, next) {
     username: req.body.username.toLowerCase(),
   });
   if (!user) {
-    return next(createErr(401, "Incorrect username"));
+    return next(res.status(401).send("Incorrect username"));
   }
   // Password check
   bcrypt.compare(req.body.password, user.password, async (err, result) => {
-    err && next(createErr(500, "Password encrypting error"));
+    err && next(res.status(500).send("Password encrypting error"));
     if (!result) {
-      return next(createErr(403, "Incorrect password"));
+      return next(res.status(403).send("Incorrect password"));
     } else {
       user.token = jwt.sign(
         {
@@ -41,15 +39,20 @@ exports.tokenCheck = async function (req, res, next) {
   const token = req.headers["authorization"];
   if (!token)
     return next(
-      createErr(401, "Authentication failed. No token included with request.")
+      res
+        .status(401)
+        .send("Authentication failed. No token included with request.")
     );
   jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
-    if (err) next(createErr(500, "Authentication failed. JWT verify error."));
+    if (err)
+      next(res.status(500).send("Authentication failed. JWT verify error."));
     const user = User.findById(decoded.id);
     if (user) {
       return user;
     } else {
-      next(createErr(401, "Authentication failed. No user found."));
+      return next(
+        res.status(401).send("Authentication failed. No user found.")
+      );
     }
   });
 };
