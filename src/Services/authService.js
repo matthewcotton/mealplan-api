@@ -43,9 +43,8 @@ exports.tokenCheck = async function (req, res, next) {
         .status(401)
         .send("Authentication failed. No token included with request.")
     );
-  jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
-    if (err)
-      next(res.status(500).send("Authentication failed. JWT verify error."));
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = User.findById(decoded.id);
     if (user) {
       return user;
@@ -54,5 +53,7 @@ exports.tokenCheck = async function (req, res, next) {
         res.status(401).send("Authentication failed. No user found.")
       );
     }
-  });
+  } catch (err) {
+    next(res.status(500).send("Authentication failed. JWT verify error."));
+  }
 };
