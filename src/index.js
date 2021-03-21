@@ -1,6 +1,6 @@
 // Require express and router
 const express = require("express");
-const router = require("./controller");
+const controller = require("./controller");
 const cors = require("cors");
 
 // Use dotenv package to parse enviroment variables
@@ -29,7 +29,7 @@ db.once("open", () => {
 // Use json parser, cors and router
 app.use(express.json());
 app.use(cors());
-app.use(router);
+app.use(controller);
 
 const port = process.env.PORT || 3001;
 

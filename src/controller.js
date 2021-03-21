@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authService = require("./Services/authService");
 const userService = require("./Services/userService");
+const recipeService = require("./Services/recipeService");
 
 /* Authentication */
 router.post("/auth", authService.auth);
@@ -25,7 +26,7 @@ router.delete("/user/:username", userService.delete);
 // Get single recipe
 
 // Create new recipe
-
+router.post("/recipe/add", recipeService.add);
 // Update exisitng recipe
 
 // Delete a recipe
