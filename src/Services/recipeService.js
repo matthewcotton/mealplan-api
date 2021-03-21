@@ -59,7 +59,7 @@ exports.add = async function (req, res, next) {
       serves,
       ingredients,
       steps,
-      user: user.id,
+      user: user._id,
     });
     await recipe.save();
     res.send({ message: "New recipe created" });
