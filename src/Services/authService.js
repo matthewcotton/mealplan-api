@@ -22,7 +22,7 @@ exports.auth = async function (req, res, next) {
     } else {
       user.token = jwt.sign(
         {
-          id: user.id,
+          id: user._id,
           username: user.username,
         },
         process.env.JWT_SECRET,

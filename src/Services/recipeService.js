@@ -2,9 +2,20 @@ const { Recipe } = require("../../models/recipes");
 const authController = require("./authService");
 
 // Get all recipes from a single user (protected)
-
-// Get single recipe (protected)
-
+exports.readAll = async (req, res, next) => {
+    // Check token validity
+    const user = await authController.tokenCheck(req, res, next);
+    if (!user) {
+        res.status(401).send("Authentication failed. No user found.");
+    }
+    try {
+        const recipes = await Recipe.find({user: user._id})
+        res.send(recipes)
+    }
+    catch {
+        res.status(500).send("Failed request due to server error")
+    }
+}
 // Add recipe (protected)
 exports.add = async function (req, res, next) {
   // Check token validity

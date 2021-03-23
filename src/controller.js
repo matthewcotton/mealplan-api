@@ -21,10 +21,9 @@ router.patch("/user/password/:username", userService.updatePassword);
 router.delete("/user/:username", userService.delete);
 
 /* Define CRUD operations for recipes */
-// Get all recipes
-
+// Get all recipes of a user
+router.get("/recipe", recipeService.readAll)
 // Get single recipe
-
 // Create new recipe
 router.post("/recipe/add", recipeService.add);
 // Update exisitng recipe
