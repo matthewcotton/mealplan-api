@@ -5,9 +5,7 @@ const authController = require("./authService");
 exports.readAll = async (req, res, next) => {
     // Check token validity
     const user = await authController.tokenCheck(req, res, next);
-    if (!user) {
-        res.status(401).send("Authentication failed. No user found.");
-    }
+    if (!user) return;
     try {
         const recipes = await Recipe.find({user: user._id})
         res.send(recipes)
