@@ -9,7 +9,7 @@ exports.readAll = async (req, res, next) => {
         res.status(401).send("Authentication failed. No user found.");
     }
     try {
-        const recipes = await Recipe.find({user: user.id})
+        const recipes = await Recipe.find({user: user._id})
         res.send(recipes)
     }
     catch {
