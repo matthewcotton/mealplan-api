@@ -66,7 +66,7 @@ Header:
 - Auth token (passed as 'authorization')
 
 ### Add A Recipes
-Endpoint: https://mealplan-api.herokuapp.com/recipe
+Endpoint: https://mealplan-api.herokuapp.com/recipe/add
 
 Body Data: (all fields required)
 - title: String 
