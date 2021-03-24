@@ -16,7 +16,7 @@ exports.add = async function (req, res, next) {
      if (!title || !duration || !start_date || !end_date ) {
         return next(res.status(400).send("All Mealplan data required."));
      }
-     const docs = await Recipe.aggregate([{ $match: { 'user':user._id } }]).sample(duration);
+     const docs = await Recipe.aggregate([{ $match: { 'user':user._id } }]).sample(Number(duration));
      const recipes = docs.map((recipe, index) => {
          return {
              day: index + 1,
