@@ -4,6 +4,7 @@ const router = express.Router();
 const authService = require("./Services/authService");
 const userService = require("./Services/userService");
 const recipeService = require("./Services/recipeService");
+const mealplanService = require('./Services/mealplanService');
 
 /* Authentication */
 router.post("/auth", authService.auth);
@@ -36,6 +37,7 @@ router.post("/recipe/add", recipeService.add);
 // Get single mealplan
 
 // Create new mealplan
+router.post("/mealplan/add", mealplanService.add);
 
 // Update exisitng mealplan
 
