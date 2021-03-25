@@ -3,6 +3,21 @@ const authController = require ('./authService');
 var { DateTime } = require('luxon');
 const { Recipe } = require("../../models/recipes");
 
+
+// Get all mealplans from a single user (protected)
+exports.readAll = async (req, res, next) => {
+    // Check token validity
+    const user = await authController.tokenCheck(req, res, next);
+    if (!user) return;
+    try {
+        const mealplans = await Mealplan.find({user: user._id})
+        res.send(mealplans)
+    }
+    catch {
+        res.status(500).send("Failed request due to server error")
+    }
+}
+
 exports.add = async function (req, res, next) {
     // Check token validity
     const user = await authController.tokenCheck(req, res, next);
