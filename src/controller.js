@@ -33,7 +33,7 @@ router.post("/recipe/add", recipeService.add);
 
 /* Define CRUD operations for mealplans */
 // Get all mealplans
-
+router.get("/mealplan", mealplanService.readAll)
 // Get single mealplan
 
 // Create new mealplan
