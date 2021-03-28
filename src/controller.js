@@ -35,7 +35,7 @@ router.post("/recipe/add", recipeService.add);
 // Get all mealplans
 router.get("/mealplan", mealplanService.readAll)
 // Get single mealplan
-
+router.get("/mealplan/:id", mealplanService.readOne)
 // Create new mealplan
 router.post("/mealplan/add", mealplanService.add);
 

@@ -2,6 +2,7 @@ const { Mealplan } = require ('../../models/mealplans');
 const authController = require ('./authService');
 var { DateTime } = require('luxon');
 const { Recipe } = require("../../models/recipes");
+const { ObjectId } = require('bson');
 
 
 // Get all mealplans from a single user (protected)
@@ -15,6 +16,19 @@ exports.readAll = async (req, res, next) => {
     }
     catch {
         res.status(500).send("Failed request due to server error")
+    }
+}
+//get single meal plan based on ID
+exports.readOne = async (req, res, next) => {
+    const user = await authController.tokenCheck(req, res, next);
+    if (!user) {
+      res.status(401).send("Authentication failed. No user found.")
+    }
+    try {
+        const mealplan = await Mealplan.findOne({ _id: ObjectId(req.params.id) })
+        res.status(200).send(mealplan)
+    } catch {
+        res.status(404).send(`No meal plan found with id ${req.params.id}`)
     }
 }
 
