@@ -1,4 +1,5 @@
 const { Recipe } = require("../../models/recipes");
+const { ObjectId } = require('bson');
 const authController = require("./authService");
 
 // Get all recipes from a single user (protected)
@@ -13,6 +14,19 @@ exports.readAll = async (req, res, next) => {
     catch {
         res.status(500).send("Failed request due to server error")
     }
+}
+exports.readOne = async (req, res, next) => {
+  const user = await authController.tokenCheck(req, res, next);
+  if (!user) {
+    return next(res.status(401).send("Authentication failed. No user found."));
+  }
+  try {
+    const recipe = await Recipe.findOne({ _id: ObjectId(req.params.id) })
+    res.send(recipe)
+  } catch {
+    res.status(404).send("No recipe found.")
+  }
+
 }
 // Add recipe (protected)
 exports.add = async function (req, res, next) {

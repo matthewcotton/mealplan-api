@@ -25,6 +25,7 @@ router.delete("/user/:username", userService.delete);
 // Get all recipes of a user
 router.get("/recipe", recipeService.readAll)
 // Get single recipe
+router.get("/recipe/:id", recipeService.readOne)
 // Create new recipe
 router.post("/recipe/add", recipeService.add);
 // Update exisitng recipe
