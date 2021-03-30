@@ -24,7 +24,7 @@ exports.readOne = async (req, res, next) => {
     const recipe = await Recipe.findOne({ _id: ObjectId(req.params.id) })
     res.send(recipe)
   } catch {
-    res.status(404).send("No user found.")
+    res.status(404).send("No recipe found.")
   }
 
 }
