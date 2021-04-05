@@ -1,33 +1,31 @@
 const { Recipe } = require("../../models/recipes");
-const { ObjectId } = require('bson');
+const { ObjectId } = require("bson");
 const authController = require("./authService");
 
 // Get all recipes from a single user (protected)
 exports.readAll = async (req, res, next) => {
-    // Check token validity
-    const user = await authController.tokenCheck(req, res, next);
-    if (!user) return;
-    try {
-        const recipes = await Recipe.find({user: user._id})
-        res.send(recipes)
-    }
-    catch {
-        res.status(500).send("Failed request due to server error")
-    }
-}
+  // Check token validity
+  const user = await authController.tokenCheck(req, res, next);
+  if (!user) return;
+  try {
+    const recipes = await Recipe.find({ user: user._id });
+    res.send(recipes);
+  } catch {
+    res.status(500).send("Failed request due to server error");
+  }
+};
 exports.readOne = async (req, res, next) => {
   const user = await authController.tokenCheck(req, res, next);
   if (!user) {
     return next(res.status(401).send("Authentication failed. No user found."));
   }
   try {
-    const recipe = await Recipe.findOne({ _id: ObjectId(req.params.id) })
-    res.send(recipe)
+    const recipe = await Recipe.findOne({ _id: ObjectId(req.params.id) });
+    res.send(recipe);
   } catch {
-    res.status(404).send("No recipe found.")
+    res.status(404).send("No recipe found.");
   }
-
-}
+};
 // Add recipe (protected)
 exports.add = async function (req, res, next) {
   // Check token validity
@@ -88,5 +86,18 @@ exports.add = async function (req, res, next) {
     res.send({ message: "New recipe created" });
   } catch (err) {
     res.status(500).send("Error creating a new recipe document. " + err);
+  }
+};
+// delete recipe
+exports.deleteOne = async (req, res, next) => {
+  const user = await authController.tokenCheck(req, res, next);
+  if (!user) {
+    return next(res.status(401).send("Authentication failed. No user found."));
+  }
+  try {
+    await Recipe.findOneAndDelete({ _id: ObjectId(req.params.id) });
+    res.status(200).send("Recipe Deleted");
+  } catch {
+    res.status(500).send("Unable to delete recipe");
   }
 };

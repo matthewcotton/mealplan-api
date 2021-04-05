@@ -28,9 +28,8 @@ router.get("/recipe", recipeService.readAll)
 router.get("/recipe/:id", recipeService.readOne)
 // Create new recipe
 router.post("/recipe/add", recipeService.add);
-// Update exisitng recipe
-
 // Delete a recipe
+router.delete("/recipe/:id", recipeService.deleteOne);
 
 /* Define CRUD operations for mealplans */
 // Get all mealplans
