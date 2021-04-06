@@ -23,9 +23,9 @@ router.delete("/user/:username", userService.delete);
 
 /* Define CRUD operations for recipes */
 // Get all recipes of a user
-router.get("/recipe", recipeService.readAll)
+router.get("/recipe", recipeService.readAll);
 // Get single recipe
-router.get("/recipe/:id", recipeService.readOne)
+router.get("/recipe/:id", recipeService.readOne);
 // Create new recipe
 router.post("/recipe/add", recipeService.add);
 // Delete a recipe
@@ -33,14 +33,15 @@ router.delete("/recipe/:id", recipeService.deleteOne);
 
 /* Define CRUD operations for mealplans */
 // Get all mealplans
-router.get("/mealplan", mealplanService.readAll)
+router.get("/mealplan", mealplanService.readAll);
 // Get single mealplan
-router.get("/mealplan/:id", mealplanService.readOne)
+router.get("/mealplan/:id", mealplanService.readOne);
 // Create new mealplan
 router.post("/mealplan/add", mealplanService.add);
 
 // Update exisitng mealplan
 
 // Delete a mealplan
+router.delete("/mealplan/:id", mealplanService.deleteOne);
 
 module.exports = router;
